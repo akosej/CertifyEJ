@@ -23,8 +23,10 @@
     "signature_role": "Vicedecana de Investigación y Postgrado",
     "signature_image": "./firma.png",
     "signature_width": 40,
-    "logo_image": "",
-    "logo_width": 30
+    "logo_image": "./logo.png",
+    "logo_width": 20,
+    "logo_x": 20,
+    "logo_y": 15
   },
   "participants": [
     {

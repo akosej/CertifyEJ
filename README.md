@@ -62,7 +62,11 @@ El archivo `certificados.json` debe contener:
     "signature_name": "Nombre del Firmante",
     "signature_role": "Cargo del Firmante",
     "signature_image": "firma.png",
-    "signature_width": 40
+    "signature_width": 40,
+    "logo_image": "./logo.png",
+    "logo_width": 20,
+    "logo_x": 20,
+    "logo_y": 15
   },
   "participants": [
     {

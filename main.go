@@ -4,6 +4,9 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"image"
+	_ "image/jpeg" // For JPEG support in image.Decode
+	"image/png"
 	"log"
 	"os"
 	"path/filepath"
@@ -27,6 +30,8 @@ type Event struct {
 	CertificateTitle string  `json:"certificate_title"` // Título del certificado
 	LogoImage        string  `json:"logo_image"`        // Opcional: imagen de logo
 	LogoWidth        float64 `json:"logo_width"`        // Ancho del logo en mm (por defecto 30mm)
+	LogoX            float64 `json:"logo_x"`            // Posición X del logo (por defecto 10mm)
+	LogoY            float64 `json:"logo_y"`            // Posición Y del logo (por defecto 10mm)
 }
 
 // Participantes
@@ -56,6 +61,59 @@ type RGB struct {
 
 // ---------------------------------------------
 
+// convertPNGToNonInterlaced reads a PNG file and converts it to non-interlaced format
+// Returns a temporary file path that should be cleaned up by the caller
+func convertPNGToNonInterlaced(pngPath string) (string, bool, error) {
+	// Read the original file
+	file, err := os.Open(pngPath)
+	if err != nil {
+		return "", false, err
+	}
+	defer file.Close()
+
+	// Decode the image
+	img, format, err := image.Decode(file)
+	if err != nil {
+		return "", false, err
+	}
+
+	// If it's not a PNG, return the original path
+	if format != "png" {
+		return pngPath, false, nil
+	}
+
+	// Create a temporary file
+	tmpFile, err := os.CreateTemp("", "cert_*.png")
+	if err != nil {
+		return "", false, err
+	}
+	tmpPath := tmpFile.Name()
+
+	// Encode as non-interlaced PNG
+	encoder := png.Encoder{
+		CompressionLevel: png.DefaultCompression,
+	}
+	err = encoder.Encode(tmpFile, img)
+	tmpFile.Close()
+
+	if err != nil {
+		os.Remove(tmpPath)
+		return "", false, err
+	}
+
+	return tmpPath, true, nil
+}
+
+// safeImagePath converts PNG images to non-interlaced format if needed
+// Returns the path to use (original or temporary) and whether cleanup is needed
+func safeImagePath(imagePath string) (string, bool, error) {
+	ext := strings.ToLower(filepath.Ext(imagePath))
+	if ext == ".png" {
+		return convertPNGToNonInterlaced(imagePath)
+	}
+	return imagePath, false, nil
+}
+
 func generateCertificate(bgImage string, event Event, p Participant, fontColor, titleColor RGB, outputDir string) error {
 	pdf := gofpdf.New("L", "mm", "A4", "")
 
@@ -64,10 +122,26 @@ func generateCertificate(bgImage string, event Event, p Participant, fontColor, 
 
 	pdf.AddPage()
 
+	// Track temporary files for cleanup
+	var tempFiles []string
+	defer func() {
+		for _, tmpFile := range tempFiles {
+			os.Remove(tmpFile)
+		}
+	}()
+
 	// Verificar si existe la imagen de fondo
 	if _, err := os.Stat(bgImage); err == nil {
+		// Convert PNG to non-interlaced if needed
+		safePath, isTemp, err := safeImagePath(bgImage)
+		if err != nil {
+			return fmt.Errorf("error procesando imagen de fondo: %v", err)
+		}
+		if isTemp {
+			tempFiles = append(tempFiles, safePath)
+		}
 		// Fondo completo
-		pdf.Image(bgImage, 0, 0, 297, 210, false, "", 0, "")
+		pdf.Image(safePath, 0, 0, 297, 210, false, "", 0, "")
 	} else {
 		// Si no hay fondo, usar color de fondo predeterminado
 		pdf.SetFillColor(245, 245, 250)
@@ -81,7 +155,15 @@ func generateCertificate(bgImage string, event Event, p Participant, fontColor, 
 			if logoWidth <= 0 {
 				logoWidth = 30 // Valor por defecto
 			}
-			pdf.Image(event.LogoImage, 10, 10, logoWidth, 0, false, "", 0, "")
+			// Convert PNG to non-interlaced if needed
+			safePath, isTemp, err := safeImagePath(event.LogoImage)
+			if err != nil {
+				return fmt.Errorf("error procesando logo: %v", err)
+			}
+			if isTemp {
+				tempFiles = append(tempFiles, safePath)
+			}
+			pdf.Image(safePath, event.LogoX, event.LogoY, logoWidth, 0, false, "", 0, "")
 		}
 	}
 
@@ -178,9 +260,17 @@ func generateCertificate(bgImage string, event Event, p Participant, fontColor, 
 			if signatureWidth <= 0 {
 				signatureWidth = 40 // Valor por defecto
 			}
+			// Convert PNG to non-interlaced if needed
+			safePath, isTemp, err := safeImagePath(event.SignatureImage)
+			if err != nil {
+				return fmt.Errorf("error procesando firma: %v", err)
+			}
+			if isTemp {
+				tempFiles = append(tempFiles, safePath)
+			}
 			// Centrar la imagen de firma
 			xPos := (297 - signatureWidth) / 2 // Centrar en A4 horizontal (297mm)
-			pdf.Image(event.SignatureImage, xPos, pdf.GetY(), signatureWidth, 0, false, "", 0, "")
+			pdf.Image(safePath, xPos, pdf.GetY(), signatureWidth, 0, false, "", 0, "")
 			pdf.Ln(signatureWidth*0.4 + 5) // Espacio suficiente para que la imagen no se sobreponга
 		}
 	}

@@ -29,7 +29,11 @@ Este es un archivo de plantilla que puedes copiar y modificar según tus necesid
     "signature_name": "Nombre Completo del Firmante",
     "signature_role": "Cargo del Firmante",
     "signature_image": "ruta/a/firma.png",
-    "signature_width": 40
+    "signature_width": 40,
+    "logo_image": "./logo.png",
+    "logo_width": 20,
+    "logo_x": 20,
+    "logo_y": 15
   },
   "participants": [
     {
