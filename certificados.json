@@ -1,0 +1,55 @@
+{
+  "background_image": "bg.jpg",
+  "output_directory": "certificados",
+  "font_color": {
+    "r": 50,
+    "g": 50,
+    "b": 50
+  },
+  "title_color": {
+    "r": 0,
+    "g": 51,
+    "b": 102
+  },
+  "event": {
+    "name": "Nombre del Evento",
+    "certificate_title": "CERTIFICADO DE PARTICIPACIÓN",
+    "location": "Holguín, Cuba",
+    "start_date": "14 de junio de 2025",
+    "end_date": "17 de junio de 2025",
+    "isbn": "ISBN-978-959-16-1234-5",
+    "organizers": "Universidad de Holguín y Ministerio de Educación Superior",
+    "signature_name": "Dr.C Yuslenin Hernandez López",
+    "signature_role": "Vicedecana de Investigación y Postgrado",
+    "signature_image": "./firma.png",
+    "signature_width": 40,
+    "logo_image": "",
+    "logo_width": 30
+  },
+  "participants": [
+    {
+      "name": "Edgar Javier Martínez López",
+      "affiliation": "Universidad de Holguín",
+      "participation_type": "ponente",
+      "work_title": "Optimización de servicios en AWS usando Go y arquitecturas serverless"
+    },
+    {
+      "name": "Carlos Gómez Hernández",
+      "affiliation": "Instituto Tecnológico de La Habana",
+      "participation_type": "ponente",
+      "work_title": "Infraestructura escalable con Kubernetes para aplicaciones empresariales"
+    },
+    {
+      "name": "María Elena Rodríguez",
+      "affiliation": "Universidad Central de Las Villas",
+      "participation_type": "autor",
+      "work_title": "Análisis de seguridad en sistemas distribuidos basados en microservicios"
+    },
+    {
+      "name": "José Luis Fernández",
+      "affiliation": "Centro de Investigación Digital",
+      "participation_type": "asistente",
+      "work_title": ""
+    }
+  ]
+}
