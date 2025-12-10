@@ -145,3 +145,18 @@ María González,Universidad B,autor,Título del trabajo 2
 3. El directorio de salida se crea automáticamente si no existe
 4. Las rutas de imágenes pueden ser relativas o absolutas
 5. Si una imagen no se encuentra, el programa continuará sin ella
+
+
+
+## 🚀 Uso rápido
+
+### Opción 1: Ejecutar directamente
+```bash
+.\certifEJ.exe
+```
+
+### Opción 2: Con parámetros personalizados
+```bash
+.\certifEJ.exe -json datos.json -bg fondo.png -output salida
+```
+

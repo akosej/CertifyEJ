@@ -7,9 +7,9 @@ Write-Host "==================================" -ForegroundColor Cyan
 Write-Host ""
 
 # Verificar que existe el ejecutable
-if (!(Test-Path "generador-certificados.exe")) {
-    Write-Host "ERROR: No se encuentra generador-certificados.exe" -ForegroundColor Red
-    Write-Host "Ejecuta primero: go build -o generador-certificados.exe" -ForegroundColor Yellow
+if (!(Test-Path "certifEJ.exe")) {
+    Write-Host "ERROR: No se encuentra certifEJ.exe" -ForegroundColor Red
+    Write-Host "Ejecuta primero: go build -o certifEJ.exe" -ForegroundColor Yellow
     exit 1
 }
 

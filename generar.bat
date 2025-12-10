@@ -19,20 +19,20 @@ if "%opcion%"=="4" goto salir
 :opcion1
 echo.
 echo Generando certificados desde certificados.json...
-generador-certificados.exe
+certifEJ.exe
 pause
 goto fin
 
 :opcion2
 echo.
 echo Generando certificados desde ejemplo-simple.json...
-generador-certificados.exe -json ejemplo-simple.json -output certificados_ejemplo
+certifEJ.exe -json ejemplo-simple.json -output certificados_ejemplo
 pause
 goto fin
 
 :opcion3
 echo.
-generador-certificados.exe -h
+certifEJ.exe -h
 pause
 goto fin
 

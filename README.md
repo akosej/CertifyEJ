@@ -1,4 +1,4 @@
-# Generador de Certificados para Eventos
+# CertifEJ
 
 Programa en Go para generar certificados de participación en eventos de forma automática a partir de datos en formato JSON.
 

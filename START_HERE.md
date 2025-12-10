@@ -93,7 +93,7 @@ go run main.go
 
 ### Compilar
 ```bash
-go build -o generador-certificados.exe
+go build -o certifEJ.exe
 ```
 
 ### Test rápido
